@@ -1,0 +1,15 @@
+version 0.001; 2004-10-19
+
+  * new function read_exim_mid() to extract information from an ID
+
+  * mention what Exim is in the documentation
+
+  * versioned dependencies in .pm
+
+  * declare module dependencies in Makefile.PL
+
+  * include Changes file
+
+version 0.000; 2004-04-02
+
+  * initial released version

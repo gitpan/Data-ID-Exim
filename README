@@ -4,8 +4,8 @@ Data::ID::Exim - generate Exim message IDs
 
 DESCRIPTION
 
-This module exports one function, "exim_mid", which generates Exim
-message IDs, as if the Perl program were an Exim process.
+This module exports one function, "exim_mid", which generates IDs using
+the algorithm that the Exim MTA uses to generate message IDs.
 
 INSTALLATION
 

@@ -1,7 +1,9 @@
 .cvsignore
+Changes
 MANIFEST
 META.yml
 Makefile.PL
 README
 lib/Data/ID/Exim.pm
 t/id.t
+t/read.t

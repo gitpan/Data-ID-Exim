@@ -8,10 +8,14 @@ Data::ID::Exim - generate Exim message IDs
 
 	$mid = exim_mid;
 
+	use Data::ID::Exim qw(read_exim_mid);
+
+	($sec, $usec, $pid) = read_exim_mid($mid);
+
 =head1 DESCRIPTION
 
-This module exports one function, C<exim_mid>, which generates Exim
-message IDs, as if the Perl program were an Exim process.
+This module exports one function, C<exim_mid>, which generates IDs using
+the algorithm that the Exim MTA uses to generate message IDs.
 
 =cut
 
@@ -20,14 +24,15 @@ package Data::ID::Exim;
 use warnings;
 use strict;
 
+use Carp qw(croak);
 use Exporter;
-use Time::HiRes qw(gettimeofday);
+use Time::HiRes 1.00 qw(gettimeofday);
 
-our $VERSION = "0.000";
+our $VERSION = "0.001";
 
 our @ISA = qw(Exporter);
 
-our @EXPORT_OK = qw(exim_mid);
+our @EXPORT_OK = qw(exim_mid read_exim_mid);
 
 =head1 FUNCTIONS
 
@@ -109,6 +114,68 @@ sub exim_mid(;$) {
 	base62(6, $sec)."-".base62(6, $$)."-".base62(2, $frac);
 }
 
+=item read_exim_mid(MID)
+
+This function extracts the information encoded in an Exim message ID.
+This is a slightly naughty thing to do: the ID should really only be
+used as a unique identifier.  Nevertheless, the time encoded in an ID
+is sometimes useful.
+
+The function returns a three-element list.  The first two elements encode
+the time at which the ID was generated, as a (seconds, microseconds)
+pair giving the time since the epoch.  This is the same time format as
+is returned by C<gettimeofday>.  The message ID does not encode the time
+with a resolution as great as a microsecond; the returned microseconds
+value is rounded down appropriately.  The third item in the result list
+is the encoded PID.
+
+=item read_exim_mid(MID, HOST_NUMBER_P)
+
+The optional HOST_NUMBER_P argument is a boolean indicating whether the
+message ID was encoded using the variant algorithm that includes a host
+number in the ID.  It is essential to decode the ID using the correct
+algorithm.  The host number, if present, is returned as a fourth item
+in the result list.
+
+=cut
+
+sub read_base62_digit($) {
+	my($digit) = @_;
+	$digit = ord($digit);
+	if($digit <= ord("9")) {
+		return $digit - ord("0");
+	} elsif($digit <= ord("Z")) {
+		return 10 + $digit - ord("A");
+	} else {
+		return 36 + $digit - ord("a");
+	}
+}
+
+sub read_base62($) {
+	my($str) = @_;
+	my $output = 0;
+	while($str =~ /(.)/g) {
+		$output = 62 * $output + read_base62_digit($1);
+	}
+	return $output;
+}
+
+sub read_exim_mid($;$) {
+	my($mid, $host_number_p) = @_;
+	croak "malformed message ID"
+		unless $mid =~ /\A([0-9A-Za-z]{6})-([0-9A-Za-z]{6})-
+				([0-9A-Za-z]{2})\z/x;
+	my($sec, $pid, $frac) = map { read_base62($_) } ($1, $2, $3);
+	if($host_number_p) {
+		my $host_number = int($frac / 200);
+		my $usec = ($frac % 200) * 5000;
+		return ($sec, $usec, $pid, $host_number);
+	} else {
+		my $usec = $frac * 500;
+		return ($sec, $usec, $pid);
+	}
+}
+
 =back
 
 =head1 BUGS
@@ -120,7 +187,8 @@ Exim suffers the same problem.
 
 L<Data::ID::Maildir>,
 L<UUID>,
-L<Win32::Genguid>
+L<Win32::Genguid>,
+L<http://www.exim.org>
 
 =head1 AUTHOR
 
