@@ -8,14 +8,16 @@ Data::ID::Exim - generate Exim message IDs
 
 	$mid = exim_mid;
 
-	use Data::ID::Exim qw(read_exim_mid);
+	use Data::ID::Exim qw(exim_mid_time read_exim_mid);
 
+	$mid_time = exim_mid_time(Time::Unix::time());
 	($sec, $usec, $pid) = read_exim_mid($mid);
 
 =head1 DESCRIPTION
 
-This module exports one function, C<exim_mid>, which generates IDs using
-the algorithm that the Exim MTA uses to generate message IDs.
+This module supplies a function which generates IDs using the algorithm
+that the Exim MTA uses to generate message IDs.  It also supplies
+functions to manipulate such IDs.
 
 =cut
 
@@ -28,11 +30,54 @@ use Carp qw(croak);
 use Exporter;
 use Time::HiRes 1.00 qw(gettimeofday);
 
-our $VERSION = "0.001";
+our $VERSION = "0.002";
 
 our @ISA = qw(Exporter);
 
-our @EXPORT_OK = qw(exim_mid read_exim_mid);
+our @EXPORT_OK = qw(exim_mid exim_mid_time read_exim_mid);
+
+{
+	my(%base62, %read_base62);
+	for(my $v = 10; $v--; ) {
+		my $d = chr(ord("0") + $v);
+		$base62{$v} = $d;
+		$read_base62{$d} = $v;
+	}
+	for(my $i = 26; $i--; ) {
+		{
+			my $v = 10 + $i;
+			my $d = chr(ord("A") + $i);
+			$base62{$v} = $d;
+			$read_base62{$d} = $v;
+		}
+		{
+			my $v = 36 + $i;
+			my $d = chr(ord("a") + $i);
+			$base62{$v} = $d;
+			$read_base62{$d} = $v;
+		}
+	}
+
+	sub base62($$) {
+		my($ndigits, $value) = @_;
+		my $digits = "";
+		while($ndigits--) {
+			use integer;
+			$digits .= $base62{$value % 62};
+			$value /= 62;
+		}
+		return reverse($digits);
+	}
+
+	sub read_base62($) {
+		my($digits) = @_;
+		my $value = 0;
+		while($digits =~ /(.)/sg) {
+			$value = 62 * $value + $read_base62{$1};
+		}
+		return $value;
+	}
+}
 
 =head1 FUNCTIONS
 
@@ -53,7 +98,7 @@ by hyphens.  The first group, of six digits, gives the integral number of
 seconds since the epoch.  The second group, also of six digits, gives the
 process ID.  The third group, of two digits, gives the fractional part
 of the number of seconds since the epoch, in units of 1/2000 of a second
-(500us).  The function does not return until the clock has advanced far
+(500 us).  The function does not return until the clock has advanced far
 enough that another call would generate a different ID.
 
 The strange structure of the ID comes from compatibility with earlier
@@ -65,7 +110,7 @@ Exim has limited support for making message IDs unique among a group
 of hosts.  Each host is assigned a number in the range 0 to 16 inclusive.
 The last two digits of the message IDs give the host number multiplied by
 200 plus the fractional part of the number of seconds since the epoch in
-units of 1/200 of a second (5ms).  This makes message IDs unique across
+units of 1/200 of a second (5 ms).  This makes message IDs unique across
 the group of hosts, at the expense of generation rate.
 
 To generate this style of ID, pass the host number to C<exim_mid>.
@@ -73,33 +118,12 @@ The host number must be configured by some out-of-band mechanism.
 
 =cut
 
-sub base62_digit($) {
-	my($n) = @_;
-	if($n < 10) {
-		chr(ord("0") + $n);
-	} elsif($n < 10+26) {
-		chr(ord("A") + $n - 10);
-	} else {
-		chr(ord("a") + $n - (10+26));
-	}
-
-}
-
-sub base62($$) {
-	my($ndigits, $value) = @_;
-	my $str = "";
-	while($ndigits--) {
-		$str = base62_digit($value % 62) . $str;
-		$value /= 62;
-	}
-	$str;
-}
-
 sub make_fraction($$) {
+	use integer;
 	my($host_number, $usec) = @_;
 	defined($host_number) ?
-		200*$host_number + int($usec / 5000) :
-		int($usec / 500);
+		200*$host_number + $usec/5000 :
+		$usec/500;
 }
 
 sub exim_mid(;$) {
@@ -111,7 +135,26 @@ sub exim_mid(;$) {
 		($new_sec, $new_usec) = gettimeofday;
 		$new_frac = make_fraction($host_number, $new_usec);
 	} while($new_sec == $sec && $new_frac == $frac);
-	base62(6, $sec)."-".base62(6, $$)."-".base62(2, $frac);
+	return base62(6, $sec)."-".base62(6, $$)."-".base62(2, $frac);
+}
+
+=item exim_mid_time(TIME)
+
+Because the first section of an Exim message ID encodes the time to a
+resolution of a second, these IDs sort in a useful way.  For the purposes
+of lexical comparison using this feature, it is sometimes useful to
+construct a string encoding a specified time in Exim message ID format.
+(This can also be used as a very concise clock display.)
+
+This function constructs the initial time portion of an Exim message
+ID.  TIME must be an integral Unix time number.  The corresponding
+six-base62-digit string is returned.
+
+=cut
+
+sub exim_mid_time($) {
+	my($t) = @_;
+	return base62(6, $t);
 }
 
 =item read_exim_mid(MID)
@@ -139,27 +182,6 @@ in the result list.
 
 =cut
 
-sub read_base62_digit($) {
-	my($digit) = @_;
-	$digit = ord($digit);
-	if($digit <= ord("9")) {
-		return $digit - ord("0");
-	} elsif($digit <= ord("Z")) {
-		return 10 + $digit - ord("A");
-	} else {
-		return 36 + $digit - ord("a");
-	}
-}
-
-sub read_base62($) {
-	my($str) = @_;
-	my $output = 0;
-	while($str =~ /(.)/g) {
-		$output = 62 * $output + read_base62_digit($1);
-	}
-	return $output;
-}
-
 sub read_exim_mid($;$) {
 	my($mid, $host_number_p) = @_;
 	croak "malformed message ID"
@@ -167,7 +189,8 @@ sub read_exim_mid($;$) {
 				([0-9A-Za-z]{2})\z/x;
 	my($sec, $pid, $frac) = map { read_base62($_) } ($1, $2, $3);
 	if($host_number_p) {
-		my $host_number = int($frac / 200);
+		use integer;
+		my $host_number = $frac / 200;
 		my $usec = ($frac % 200) * 5000;
 		return ($sec, $usec, $pid, $host_number);
 	} else {
@@ -196,7 +219,7 @@ Andrew Main (Zefram) <zefram@fysh.org>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004 Andrew Main (Zefram) <zefram@fysh.org>
+Copyright (C) 2004, 2006 Andrew Main (Zefram) <zefram@fysh.org>
 
 This module is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

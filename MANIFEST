@@ -7,3 +7,4 @@ README
 lib/Data/ID/Exim.pm
 t/id.t
 t/read.t
+t/time.t
