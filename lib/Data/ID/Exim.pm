@@ -13,11 +13,17 @@ Data::ID::Exim - generate Exim message IDs
 	$mid_time = exim_mid_time(Time::Unix::time());
 	($sec, $usec, $pid) = read_exim_mid($mid);
 
+	use Data::ID::Exim qw(base62 read_base62);
+
+	$digits = base62(3, $value);
+	$value = read_base62($digits);
+
+
 =head1 DESCRIPTION
 
 This module supplies a function which generates IDs using the algorithm
 that the Exim MTA uses to generate message IDs.  It also supplies
-functions to manipulate such IDs.
+functions to manipulate such IDs, and the base 62 encoding in isolation.
 
 =cut
 
@@ -30,11 +36,11 @@ use Carp qw(croak);
 use Exporter;
 use Time::HiRes 1.00 qw(gettimeofday);
 
-our $VERSION = "0.002";
+our $VERSION = "0.003";
 
 our @ISA = qw(Exporter);
 
-our @EXPORT_OK = qw(exim_mid exim_mid_time read_exim_mid);
+our @EXPORT_OK = qw(exim_mid exim_mid_time read_exim_mid base62 read_base62);
 
 {
 	my(%base62, %read_base62);
@@ -199,6 +205,17 @@ sub read_exim_mid($;$) {
 	}
 }
 
+=item base62(NDIGITS, VALUE)
+
+This performs base 62 encoding.  VALUE and NDIGITS must both be
+non-negative native integers.  VALUE is expressed in base 62, and the
+least significant NDIGITS digits are returned as a string.
+
+=item read_base62(DIGITS)
+
+This performs base 62 decoding.  DIGITS must be a string of base 62
+digits.  It is interpreted and the value returned as a native integer.
+
 =back
 
 =head1 BUGS
@@ -219,7 +236,7 @@ Andrew Main (Zefram) <zefram@fysh.org>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004, 2006 Andrew Main (Zefram) <zefram@fysh.org>
+Copyright (C) 2004, 2006, 2007 Andrew Main (Zefram) <zefram@fysh.org>
 
 This module is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

@@ -1,3 +1,9 @@
+version 0.003; 2007-02-02
+
+  * export and document functions base62() and read_base62(); these
+    functions previously existed unexported, base62() from version 0.000
+    and read_base62() from version 0.001
+
 version 0.002; 2006-05-17
 
   * new function exim_mid_time() to construct time part of ID for an
