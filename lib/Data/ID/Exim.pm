@@ -36,7 +36,7 @@ use Carp qw(croak);
 use Exporter;
 use Time::HiRes 1.00 qw(gettimeofday);
 
-our $VERSION = "0.003";
+our $VERSION = "0.004";
 
 our @ISA = qw(Exporter);
 
@@ -72,7 +72,7 @@ our @EXPORT_OK = qw(exim_mid exim_mid_time read_exim_mid base62 read_base62);
 			$digits .= $base62{$value % 62};
 			$value /= 62;
 		}
-		return reverse($digits);
+		return scalar(reverse($digits));
 	}
 
 	sub read_base62($) {

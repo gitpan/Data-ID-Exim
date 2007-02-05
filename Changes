@@ -1,3 +1,8 @@
+version 0.004; 2007-02-05
+
+  * bugfix: make exim_mid_time() and base62() work when called in list
+    context (they used to assume that they were called in scalar context)
+
 version 0.003; 2007-02-02
 
   * export and document functions base62() and read_base62(); these
