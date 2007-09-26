@@ -33,13 +33,11 @@ use warnings;
 use strict;
 
 use Carp qw(croak);
-use Exporter;
 use Time::HiRes 1.00 qw(gettimeofday);
 
-our $VERSION = "0.004";
+our $VERSION = "0.005";
 
-our @ISA = qw(Exporter);
-
+use base "Exporter";
 our @EXPORT_OK = qw(exim_mid exim_mid_time read_exim_mid base62 read_base62);
 
 {
@@ -124,7 +122,7 @@ The host number must be configured by some out-of-band mechanism.
 
 =cut
 
-sub make_fraction($$) {
+sub _make_fraction($$) {
 	use integer;
 	my($host_number, $usec) = @_;
 	defined($host_number) ?
@@ -135,11 +133,11 @@ sub make_fraction($$) {
 sub exim_mid(;$) {
 	my($host_number) = @_;
 	my($sec, $usec) = gettimeofday;
-	my $frac = make_fraction($host_number, $usec);
+	my $frac = _make_fraction($host_number, $usec);
 	my($new_sec, $new_usec, $new_frac);
 	do {
 		($new_sec, $new_usec) = gettimeofday;
-		$new_frac = make_fraction($host_number, $new_usec);
+		$new_frac = _make_fraction($host_number, $new_usec);
 	} while($new_sec == $sec && $new_frac == $frac);
 	return base62(6, $sec)."-".base62(6, $$)."-".base62(2, $frac);
 }
@@ -237,6 +235,8 @@ Andrew Main (Zefram) <zefram@fysh.org>
 =head1 COPYRIGHT
 
 Copyright (C) 2004, 2006, 2007 Andrew Main (Zefram) <zefram@fysh.org>
+
+=head1 LICENSE
 
 This module is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

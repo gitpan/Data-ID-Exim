@@ -1,3 +1,18 @@
+version 0.005; 2007-09-26
+
+  * use "base" pragma to import Exporter behaviour
+
+  * test POD syntax and coverage, and rename an internal function to
+    satisfy the coverage test
+
+  * build with Module::Build instead of ExtUtils::MakeMaker
+
+  * complete dependency list
+
+  * include signature in distribution
+
+  * in documentation, separate "license" section from "copyright" section
+
 version 0.004; 2007-02-05
 
   * bugfix: make exim_mid_time() and base62() work when called in list
