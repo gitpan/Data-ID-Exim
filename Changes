@@ -1,3 +1,15 @@
+version 0.006; 2009-04-22
+
+  * use simpler "parent" pragma in place of "base"
+
+  * in documentation, use the term "truth value" instead of the less
+    precise "boolean"
+
+  * in documentation, refer to Win32::Guidgen rather than the non-existent
+    Win32::Genguid
+
+  * use full stricture in Build.PL
+
 version 0.005; 2007-09-26
 
   * use "base" pragma to import Exporter behaviour

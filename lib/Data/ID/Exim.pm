@@ -35,9 +35,9 @@ use strict;
 use Carp qw(croak);
 use Time::HiRes 1.00 qw(gettimeofday);
 
-our $VERSION = "0.005";
+our $VERSION = "0.006";
 
-use base "Exporter";
+use parent "Exporter";
 our @EXPORT_OK = qw(exim_mid exim_mid_time read_exim_mid base62 read_base62);
 
 {
@@ -178,7 +178,7 @@ is the encoded PID.
 
 =item read_exim_mid(MID, HOST_NUMBER_P)
 
-The optional HOST_NUMBER_P argument is a boolean indicating whether the
+The optional HOST_NUMBER_P argument is a truth value indicating whether the
 message ID was encoded using the variant algorithm that includes a host
 number in the ID.  It is essential to decode the ID using the correct
 algorithm.  The host number, if present, is returned as a fourth item
@@ -225,7 +225,7 @@ Exim suffers the same problem.
 
 L<Data::ID::Maildir>,
 L<UUID>,
-L<Win32::Genguid>,
+L<Win32::Guidgen>,
 L<http://www.exim.org>
 
 =head1 AUTHOR
@@ -234,7 +234,8 @@ Andrew Main (Zefram) <zefram@fysh.org>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004, 2006, 2007 Andrew Main (Zefram) <zefram@fysh.org>
+Copyright (C) 2004, 2006, 2007, 2009
+Andrew Main (Zefram) <zefram@fysh.org>
 
 =head1 LICENSE
 

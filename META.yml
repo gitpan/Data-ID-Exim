@@ -1,6 +1,6 @@
 ---
 name: Data-ID-Exim
-version: 0.005
+version: 0.006
 author:
   - 'Andrew Main (Zefram) <zefram@fysh.org>'
 abstract: generate Exim message IDs
@@ -11,8 +11,8 @@ requires:
   Carp: 0
   Exporter: 0
   Time::HiRes: 1.00
-  base: 0
   integer: 0
+  parent: 0
   perl: 5.006
   strict: 0
   warnings: 0
@@ -26,8 +26,8 @@ dynamic_config: 0
 provides:
   Data::ID::Exim:
     file: lib/Data/ID/Exim.pm
-    version: 0.005
-generated_by: Module::Build version 0.2808
+    version: 0.006
+generated_by: Module::Build version 0.31012
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html
   version: 1.2
