@@ -1,12 +1,30 @@
 ---
-name: Data-ID-Exim
-version: 0.006
+abstract: 'generate Exim message IDs'
 author:
   - 'Andrew Main (Zefram) <zefram@fysh.org>'
-abstract: generate Exim message IDs
+build_requires:
+  Module::Build: 0
+  Test::More: 0
+  perl: 5.006
+  strict: 0
+  warnings: 0
+configure_requires:
+  Module::Build: 0
+  perl: 5.006
+  strict: 0
+  warnings: 0
+distribution_type: module
+dynamic_config: 0
+generated_by: 'Module::Build version 0.3607'
 license: perl
-resources:
-  license: http://dev.perl.org/licenses/
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Data-ID-Exim
+provides:
+  Data::ID::Exim:
+    file: lib/Data/ID/Exim.pm
+    version: 0.007
 requires:
   Carp: 0
   Exporter: 0
@@ -16,19 +34,6 @@ requires:
   perl: 5.006
   strict: 0
   warnings: 0
-build_requires:
-  Module::Build: 0
-  Test::More: 0
-  perl: 5.006
-  strict: 0
-  warnings: 0
-dynamic_config: 0
-provides:
-  Data::ID::Exim:
-    file: lib/Data/ID/Exim.pm
-    version: 0.006
-generated_by: Module::Build version 0.31012
-meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.2.html
-  version: 1.2
-distribution_type: module
+resources:
+  license: http://dev.perl.org/licenses/
+version: 0.007

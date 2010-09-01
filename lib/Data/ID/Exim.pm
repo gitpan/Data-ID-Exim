@@ -29,13 +29,14 @@ functions to manipulate such IDs, and the base 62 encoding in isolation.
 
 package Data::ID::Exim;
 
+{ use 5.006; }
 use warnings;
 use strict;
 
 use Carp qw(croak);
 use Time::HiRes 1.00 qw(gettimeofday);
 
-our $VERSION = "0.006";
+our $VERSION = "0.007";
 
 use parent "Exporter";
 our @EXPORT_OK = qw(exim_mid exim_mid_time read_exim_mid base62 read_base62);
@@ -234,7 +235,7 @@ Andrew Main (Zefram) <zefram@fysh.org>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004, 2006, 2007, 2009
+Copyright (C) 2004, 2006, 2007, 2009, 2010
 Andrew Main (Zefram) <zefram@fysh.org>
 
 =head1 LICENSE

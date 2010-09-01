@@ -1,3 +1,15 @@
+version 0.007; 2010-09-01
+
+  * check for required Perl version at runtime
+
+  * use full stricture in test suite
+
+  * in Build.PL, explicitly declare configure-time requirements
+
+  * remove bogus "exit 0" from Build.PL
+
+  * add MYMETA.yml to .cvsignore
+
 version 0.006; 2009-04-22
 
   * use simpler "parent" pragma in place of "base"

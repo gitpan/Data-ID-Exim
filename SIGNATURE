@@ -1,5 +1,5 @@
 This file contains message digests of all files listed in MANIFEST,
-signed via the Module::Signature module, version 0.55.
+signed via the Module::Signature module, version 0.64.
 
 To verify the content in this distribution, first make sure you have
 Module::Signature installed, then type:
@@ -14,24 +14,24 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 0b93cec4c7c94eddf4c1dd9116e1ed9d41e9f109 .cvsignore
-SHA1 6c64e97178fd993dc210f2e5b8d2a656abf519ef Build.PL
-SHA1 2eab9b1405a0fe91d0271e45173e266015aaa504 Changes
+SHA1 86f57087264d347e6a1df1595e9682319edd921d .cvsignore
+SHA1 b2cad2c987deb26fb4fb2bb40542ad0597a69ed3 Build.PL
+SHA1 7f0b31d17af899d80068c90960a88c05a760621d Changes
 SHA1 3946f7d5fb9ac0bce70be793266a924e57703c10 MANIFEST
-SHA1 da39c73407d14c85b3852e31f9bfc4c2f3dd6ab5 META.yml
-SHA1 f39315b8e83202006e8a916c6a58725d104f75ec Makefile.PL
-SHA1 23cf0d60e7c299187a99702230dc09729e8f1820 README
-SHA1 3b5d1f330b09e0998229da4f859c2958ff282419 lib/Data/ID/Exim.pm
-SHA1 e90c8c19f0d799335c468dde585255fe4ae407fb t/base62.t
-SHA1 55ee92beb4e88557268f42fef31b0675ce35b31d t/id.t
-SHA1 0e141eecf3ca4903ef38d9413b5403a9ddb0392f t/pod_cvg.t
-SHA1 74a957cd8b93f25672ecc6aa578a671d084dd343 t/pod_syn.t
-SHA1 318198d35ce89b9cd8f4cb8354632e3821d86bec t/read.t
-SHA1 5116e25a36421017f2cd3e61803ff1aacb88406b t/time.t
+SHA1 0cbf111606dec03c6060857fb4b306243d6daf10 META.yml
+SHA1 caae608231ffe78390c76451ade51a7cfc87a9f9 Makefile.PL
+SHA1 dd23e8b75cde1ccfe52425ea31ec4f97447b92a1 README
+SHA1 175d145c1238eb346153d4230b59f35bf7205d3d lib/Data/ID/Exim.pm
+SHA1 7280120a44809378c65ccdc17d3ded1b4efb23fc t/base62.t
+SHA1 a492bfbd265eac6ceb18c27f122fe27f86e807d1 t/id.t
+SHA1 904d9a4f76525e2303e4b0c168c68230f223c8de t/pod_cvg.t
+SHA1 65c75abdef6f01a5d1588a307f2ddfe2333dc961 t/pod_syn.t
+SHA1 69d069e1729261a8567cb0542953dea0fe01d8f2 t/read.t
+SHA1 0b14657a385d530607942f44a45309f1300608a2 t/time.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.9 (GNU/Linux)
 
-iEYEARECAAYFAknvil4ACgkQOV9mt2VyAVGF7QCffwkQehRL0olAUw0+FC14kTSn
-qEcAn2ylMm1+TEFHdfz+srt/bfmVuoDv
-=3BNm
+iEYEARECAAYFAkx+yyYACgkQOV9mt2VyAVHqmgCaA/XnhDzI3D31Igl7ypyW977n
+XJ4AoKjxwDjdqHGsWSunJ8xmwUvg7edU
+=TN6p
 -----END PGP SIGNATURE-----
