@@ -36,7 +36,7 @@ use strict;
 use Carp qw(croak);
 use Time::HiRes 1.00 qw(gettimeofday);
 
-our $VERSION = "0.007";
+our $VERSION = "0.008";
 
 use parent "Exporter";
 our @EXPORT_OK = qw(exim_mid exim_mid_time read_exim_mid base62 read_base62);
@@ -192,7 +192,8 @@ sub read_exim_mid($;$) {
 	croak "malformed message ID"
 		unless $mid =~ /\A([0-9A-Za-z]{6})-([0-9A-Za-z]{6})-
 				([0-9A-Za-z]{2})\z/x;
-	my($sec, $pid, $frac) = map { read_base62($_) } ($1, $2, $3);
+	my @b62 = ($1, $2, $3);
+	my($sec, $pid, $frac) = map { read_base62($_) } @b62;
 	if($host_number_p) {
 		use integer;
 		my $host_number = $frac / 200;
@@ -235,7 +236,7 @@ Andrew Main (Zefram) <zefram@fysh.org>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2004, 2006, 2007, 2009, 2010
+Copyright (C) 2004, 2006, 2007, 2009, 2010, 2011
 Andrew Main (Zefram) <zefram@fysh.org>
 
 =head1 LICENSE

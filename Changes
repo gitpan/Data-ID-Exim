@@ -1,3 +1,14 @@
+version 0.008; 2011-11-19
+
+  * avoid latent bug of passing magic variables $1 et al into functions
+    where in the future they might unexpectedly change value
+
+  * include META.json in distribution
+
+  * convert .cvsignore to .gitignore
+
+  * add MYMETA.json to .gitignore
+
 version 0.007; 2010-09-01
 
   * check for required Perl version at runtime
